@@ -42,11 +42,14 @@ void *blewh(void *vargp) {
         int prodIndex = bufferProdCount % buffLen;
         buffer[prodIndex] = itemNum;
         printf("producer_%d produced item %d\n", producerID, itemNum);
+        
+        pthread_mutex_unlock(&mutex);
+        pthread_cond_signal(&notEmpty);
+
+        
         if (delayPr) {
             usleep(500000);
         }
-        pthread_cond_signal(&notEmpty);
-        pthread_mutex_unlock(&mutex);
     }
 
     // exit(0);
@@ -65,12 +68,13 @@ void *nom(void *vargp) {
         int consumeIndex = bufferConsumeCount % buffLen;
         int consumedItem = buffer[consumeIndex];
         printf("consumer_%d consumed item %d\n", consumerID, consumedItem);
+                
+        pthread_mutex_unlock(&mutex);
+        pthread_cond_signal(&notFull);
+
         if (!delayPr) {
             usleep(500000);
         }
-        
-        pthread_cond_signal(&notFull);
-        pthread_mutex_unlock(&mutex);
     }
 
     // exit(0);

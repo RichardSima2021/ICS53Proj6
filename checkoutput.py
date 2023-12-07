@@ -64,7 +64,7 @@ def check_output_file(file_path):
 
     return True
 
-if check_output_file('output.txt'):
+if check_output_file('output2.txt'):
     print("Successful")
 else:
     print("Error")
